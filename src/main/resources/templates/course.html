@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html :th="http://www.thymeleaf.org" lang="en" xmlns: xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>学生选课后台管理系统</title>
+
+    <link href="/js/layui-v2.5.5/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="/info" style="font-size: 28px">学生管理系统</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="/images/1.jpg" ;; class="layui-nav-img"/>
+                    <span th:text="${session.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/info/">基本资料</a></dd>
+                    <dd>..</dd>
+                    <dd><a href="">修改密码</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="/info">个人信息管理</a></li>
+                <li class="layui-nav-item ">
+                    <a class="" href="/student/findall/1?pagename=course">学生信息管理</a>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed"><a href="/course/findall/1" >课程信息管理</a></li>
+                <li class="layui-nav-item"><a href="/score/findallPage/1">选课信息管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div style="margin-bottom: 5px">
+                <a href="/course/add" class="btn btn-danger " th:if="${session.role=='manager'}">新增课程</a>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <div class="context_1">
+                        <span>课程信息列表</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  table-hover  table-condensed" id="tabta">
+                            <tr class="text-center text-primary">
+                                <td><input type="checkbox" id="checkAll"/>全选/反选</td>
+                                <td>课程号</td>
+                                <td>课程名</td>
+                                <td>学分</td>
+                                <td>操作</td>
+                            </tr>
+                            <tr class="text-center" th:each="Course:${allcourse.content}">
+                                <td><input type="checkbox" id="subTypeId" value="${Course.cid}"/></td>
+                                <td th:text="${Course.cid}"></td>
+                                <td th:text="${Course.cname}"></td>
+                                <td th:text="${Course.ccredit}"></td>
+                                <!--th:href="@{/score/addScore/{courseid}(courseid=${Course.cid})}" -->
+                                <td><a class="btn btn-success" th:onclick="choosecourse([[${Course.cid}]])" th:if="${session.role=='student'}">选课</a>
+                                    <a href="#" class="btn btn-primary " th:if="${session.role=='manager'}">修改</a>
+                                    <a href="#" class="btn btn-danger " th:if="${session.role=='manager'}" th:onclick="deletecourse([[${Course.cid}]])">删除</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    <ul class="pagination pagination-lg" >
+                        <li th:class="${allcourse.pageNum==1}?'disabled' : ''"><a th:href="@{'/course/findall/'+${allcourse.pageNum-1}}">上一页</a></li>
+                        <li th:if="${allcourse.pageNum-3 >=1}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum-3}}" th:text="${allcourse.pageNum -3}" >1</a></li>
+                        <li th:if="${allcourse.pageNum-2 >=1}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum-2}}" th:text="${allcourse.pageNum -2}" >1</a></li>
+                        <li th:if="${allcourse.pageNum-1 >=1}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum-1}}" th:text="${allcourse.pageNum -1}" >1</a></li>
+                        <li class="active"><a href="#" th:text="${allcourse.pageNum}" >1</a></li>
+                        <li th:if="${allcourse.pageNum+1 <=allcourse.totalPages}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum+1}}" th:text="${allcourse.pageNum +1}" >1</a></li>
+                        <li th:if="${allcourse.pageNum+2 <=allcourse.totalPages}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum+2}}" th:text="${allcourse.pageNum +2}" >1</a></li>
+                        <li th:if="${allcourse.pageNum+3 <=allcourse.totalPages}" ><a th:href="@{'/course/findall/' + ${allcourse.pageNum+3}}" th:text="${allcourse.pageNum +3}" >1</a></li>
+
+                        <li th:class="${allcourse.pageNum==allcourse.totalPages}?'disabled' : ''" ><a th:href="@{'/course/findall/'+${allcourse.pageNum+1}}">下一页</a></li>
+                    </ul><br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script th:src="@{/js/layui-v2.5.5/layui/layui.js}"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+    function choosecourse(cid) {
+        var r=confirm("是否选修此课程？");
+        if(r==true){
+            // alert("yes")
+            $.ajax({
+                url: '/score/addScore',
+                async: false,
+                type: 'GET',
+                data: {cid:cid},
+                complete: function (msg) {
+                    console.log('完成')
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data['success']) {
+                        alert("选课成功！")
+                        window.location.replace("/score/findallPage/1");
+                    } else {
+                        alert("请勿重复选课！")
+                    }
+                }
+
+            })
+
+        }else{
+            // alert("no");
+        }
+    }
+
+    $(document).ready(function () {
+        var i=0;
+        $("#checkAll").click(function () {
+            if(i==0){
+                $("#tabta td :checkbox").prop('checked',true);
+                i=1;
+            }else {
+                $("#tabta td :checkbox").prop('checked',false);
+                i=0;
+            }
+        })
+    })
+
+    function deletecourse(cid) {
+        var r=confirm("是否删除此课程？");
+        if(r==true){
+            // alert("yes")
+            $.ajax({
+                url: '/course/deletecourse',
+                async: false,
+                type: 'GET',
+                data: {cid:cid},
+                complete: function (msg) {
+                    console.log('完成')
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data['success']) {
+                        alert("删除成功！")
+                        window.location.replace("/course/findall/1");
+                    } else {
+                        alert("请勿失败！")
+                    }
+                }
+
+            })
+
+        }else{
+            // alert("no");
+        }
+    }
+
+</script>
+</body>
+</html>

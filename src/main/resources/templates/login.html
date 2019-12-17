@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>登录</title>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrapValidator.css" rel="stylesheet">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrapValidator.js"></script>
+</head>
+<body style="background-color: #2aabd2;">
+<div class="panel panel-primary" style="text-align: center;width: 500px;margin: 0 auto;margin-top: 200px">
+    <div class="panel-heading">学生管理系统登录</div>
+    <div class="panel-body">
+        <form action="" method="post" class="form-horizontal" id="loginform" onsubmit="return false;">
+            <div class="form-group">
+                <label for="username" class="col-sm-4" style="line-height: 32px;text-align: right" id="labelname">用户名：</label>
+                <div class="col-sm-7">
+                    <input type="text" class="form-control" id="username" name="username" placeholder="请输入用户名或学号">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password" class="col-sm-4" style="line-height:34px;text-align: right">密码：</label>
+                <div class="col-sm-7">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="请输入密码">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="radio col-sm-3 col-sm-offset-1">
+                    <label>
+                        <input type="radio" name="permissionUser" id="manager" value="manager" checked >
+                        管理员
+                    </label>
+                </div>
+                <div class="radio col-sm-3">
+                    <label>
+                        <input type="radio" name="permissionUser" id="student" value="student" >
+                        学生
+                    </label>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="form-group">
+                    <div class="col-sm-4 col-sm-offset-2">
+                <input type="button" value="提交" class="form-control btn-primary" id="loginbtn">
+                    </div>
+                    <div class="col-sm-4">
+                <input type="reset" value="重置" class="form-control btn-danger" id="btnrest">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#manager').click(function () {
+           $('#labelname').text("用户名");
+        });
+
+        $('#student').click(function () {
+            $('#labelname').text("学号");
+        });
+
+        var form = $('#loginform');
+        $('#loginform').bootstrapValidator({
+            message: '该值无效',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    message: '用户名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '用户名不能为空'
+                        },
+                        stringLength: {
+                            min: 5,
+                            max: 20,
+                            message: '用户名长度必须在5到20之间'
+                        }
+                        // threshold :  4 , //设置4字符以上开始请求服务器
+                        // //有待验证，备注以备下次使用。
+                        // //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                        // //{"valid":false} //表示不合法，验证不通过
+                        // //{"valid":true} //表示合法，验证通过
+                        // remote: {//发起Ajax请求。
+                        //     url: 'user/name',//验证地址
+                        //     data:{userName:$('input[name="userName"]').val() }
+                        //     message: '用户已存在',//提示消息
+                        //     delay :  2000,//设置2秒发起名字验证
+                        //     type: 'POST' //请求方式
+                        // }
+                    }
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 18,
+                            message: '密码长度必须在6到18位之间'
+                        },
+                        regexp: {
+                            regexp: /^[a-zA-Z0-9_]+$/,
+                            message: '密码只能包含大写、小写、数字和下划线'
+                        }
+                    }
+                }
+            }
+        })
+        $("#btnrest").click(function () {
+            $("#loginform").data('bootstrapValidator').resetForm();
+        });
+        $("#loginbtn").click(function () {
+           var re=form.data('bootstrapValidator');
+            re.validate();
+           if(re.isValid()){
+               //发送ajax请求
+               $.ajax({
+                   url:'/login/',
+                   async:false,
+                   type:'POST',
+                   data:form.serialize(),
+                   complete:function (msg) {
+                       console.log('完成')
+                   },
+                   success:function (data) {
+                       if(data['success']){
+                           window.location.replace("/login/userinfo");
+                       }else{
+                           $('#password').val("");
+                           alert("账号或者密码错误，请重新输入");
+                           //重新校检
+                           $("#loginform").data('bootstrapValidator').resetForm();
+                       }
+                   }
+
+               })
+           }
+
+        });
+
+    });
+
+</script>
+
+
+</body>
+</html>

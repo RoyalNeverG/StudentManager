@@ -1,0 +1,21 @@
+server:
+  port: 9001
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://47.96.141.44:3306/studentmanager?useUnicode=true&characterEncoding=utf-8
+    username: root
+    password: 147258369
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  thymeleaf:
+    cache: false
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+mybatis:
+  mapper-locations: classpath:mybatis/**/*.xml
+  type-aliases-package: com.lc.studentmanager.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

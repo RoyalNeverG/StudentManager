@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html :th="http://www.thymeleaf.org" lang="en" xmlns: xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>学生选课后台管理系统</title>
+
+    <link href="/js/layui-v2.5.5/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="/info" style="font-size: 28px">学生管理系统</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="/images/1.jpg" ;; class="layui-nav-img"/>
+                    <span th:text="${session.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/info/">基本资料</a></dd>
+                    <dd>..</dd>
+                    <dd><a href="">修改密码</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="/info">个人信息管理</a></li>
+                <li class="layui-nav-item ">
+                    <a class="" href="/student/findall/1?pagename=score">学生信息管理</a>
+                </li>
+                <li class="layui-nav-item"><a href="/course/findall/1">课程信息管理</a></li>
+                <li class="layui-nav-item layui-nav-itemed"><a href="/score/findallPage/1">选课信息管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+
+        <!-- 内容主体区域 -->
+        <div style="padding: 15px;">
+            <div style="margin-bottom: 5px">
+                <a href="/course/findall/1" class="btn btn-danger " th:if="${session.role=='student'}">新增选课</a>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading text-center">
+                    <div class="context_1">
+                        <span>学生选课信息列表</span>
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-bordered  table-hover  table-condensed" id="tabta">
+                            <tr class="text-center text-primary">
+                                <td><input type="checkbox" id="checkAll"/>全选/反选</td>
+                                <td>课程号</td>
+                                <td>学号</td>
+                                <td>成绩</td>
+                                <td>姓名</td>
+                                <td>专业</td>
+                                <td>课程名</td>
+                                <td>操作</td>
+                            </tr>
+                            <tr class="text-center" th:each="ScoreVo:${scoreall.content}">
+                                <td><input type="checkbox" id="subTypeId" value="${ScoreVo.scoreid}"/></td>
+                                <td th:text="${ScoreVo.cid}"></td>
+                                <td th:text="${ScoreVo.stuid}"></td>
+                                <td th:text="${ScoreVo.grade}"></td>
+                                <td th:text="${ScoreVo.stuname}"></td>
+                                <td th:text="${ScoreVo.studept}"></td>
+                                <td th:text="${ScoreVo.cname}"></td>
+                                <td>
+                                    <a href="#" class="btn btn-primary ">修改</a>
+                                    <a href="#" class="btn btn-danger " th:onclick="deletescore([[${ScoreVo.scoreid}]])">删除</a>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div class="panel-footer text-center">
+                    <ul class="pagination pagination-lg" >
+                        <li th:class="${scoreall.pageNum==1}?'disabled' : ''"><a th:href="@{'/score/findallPage/'+${scoreall.pageNum-1}}">上一页</a></li>
+                        <li th:if="${scoreall.pageNum-3 >=1}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum-3}}" th:text="${scoreall.pageNum -3}" >1</a></li>
+                        <li th:if="${scoreall.pageNum-2 >=1}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum-2}}" th:text="${scoreall.pageNum -2}" >1</a></li>
+                        <li th:if="${scoreall.pageNum-1 >=1}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum-1}}" th:text="${scoreall.pageNum -1}" >1</a></li>
+                        <li class="active"><a href="#" th:text="${scoreall.pageNum}" >1</a></li>
+                        <li th:if="${scoreall.pageNum+1 <=scoreall.totalPages}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum+1}}" th:text="${scoreall.pageNum +1}" >1</a></li>
+                        <li th:if="${scoreall.pageNum+2 <=scoreall.totalPages}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum+2}}" th:text="${scoreall.pageNum +2}" >1</a></li>
+                        <li th:if="${scoreall.pageNum+3 <=scoreall.totalPages}" ><a th:href="@{'/score/findallPage/' + ${scoreall.pageNum+3}}" th:text="${scoreall.pageNum +3}" >1</a></li>
+
+                        <li th:class="${scoreall.pageNum==scoreall.totalPages}?'disabled' : ''" ><a th:href="@{'/score/findallPage/'+${scoreall.pageNum+1}}">下一页</a></li>
+                    </ul><br>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+</div>
+<script th:src="@{/js/layui-v2.5.5/layui/layui.js}"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+
+    $(document).ready(function () {
+        var i=0;
+        $("#checkAll").click(function () {
+            if(i==0){
+                $("#tabta td :checkbox").prop('checked',true);
+                i=1;
+            }else {
+                $("#tabta td :checkbox").prop('checked',false);
+                i=0;
+            }
+        })
+    })
+
+    function deletescore(scoreid) {
+        var r=confirm("是否删除此选课？");
+        if(r==true){
+            // alert("yes")
+            $.ajax({
+                url: '/score/deletescore',
+                async: false,
+                type: 'GET',
+                data: {scoreid:scoreid},
+                complete: function (msg) {
+                    console.log('完成')
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data['success']) {
+                        alert("删除成功！")
+                        window.location.replace("/score/findallPage/1");
+                    } else {
+                        alert("删除失败！")
+                    }
+                }
+
+            })
+
+        }
+    }
+
+</script>
+</body>
+</html>

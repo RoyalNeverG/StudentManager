@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html :th="http://www.thymeleaf.org" lang="en" xmlns: xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>学生选课后台管理系统</title>
+
+    <link href="/js/layui-v2.5.5/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <script th:src="@{/js/layui-v2.5.5/layui/layui.js}"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrapValidator.css" rel="stylesheet">
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrapValidator.js"></script>
+</head>
+<body class="layui-layout-body" id="body1">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="/info" style="font-size: 28px">学生管理系统</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="/images/1.jpg" ;; class="layui-nav-img"/>
+                    <span th:text="${session.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/info">基本资料</a></dd>
+                    <dd>..</dd>
+                    <dd><a href="/info">修改密码</a></dd>
+                </dl>
+
+
+            </li>
+            <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item  layui-nav-itemed"><a href="/info">个人信息管理</a></li>
+                <li class="layui-nav-item">
+                    <a class="" href="/student/findall/1?pagename=userinfo">学生信息管理</a>
+                </li>
+                <li class="layui-nav-item"><a href="/course/findall/1">课程信息管理</a></li>
+                <li class="layui-nav-item"><a href="/score/findallPage/1">选课信息管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+
+        <!-- 内容主体区域 -->
+        <div style="width: 400px;margin: 0 auto">
+            <h2>欢迎用户<span style="color: #00F7DE" th:text="${session.username}"></span>登录此系统！</h2>
+        </div>
+        <hr style="height: 2px"/>
+        <div th:if="${session.role=='manager'}" style="margin-top: 20px;width: 500px" class="form-horizontal">
+            <form action="" method="post" class="form-horizontal" id="form1" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="userid" class="col-sm-3" style="line-height: 34px;text-align: right">用户id：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="userid" name="username"
+                               th:value="${session.managerinfo.id}" disabled="">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="username" class="col-sm-3" style="line-height: 34px;text-align: right">用户名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="username" name="username"
+                               th:value="${session.managerinfo.username}" disabled="">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div th:if="${session.role=='student'}" style="margin-top: 20px;width: 500px;float: left"
+             class="form-horizontal">
+            <form action="" method="post" class="form-horizontal" id="form2" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="stuid" class="col-sm-3" style="line-height: 34px;text-align: right">学号：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="stuid" name="stuid"
+                               th:value="${session.studentinfo.stuid}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stuaname" class="col-sm-3" style="line-height: 34px;text-align: right">姓名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="stuaname" name="stuname"
+                               th:value="${session.studentinfo.stuname}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stusex" class="col-sm-3" style="line-height: 34px;text-align: right">性别：</label>
+                    <div class="col-sm-7">
+                        <select class="form-control" id="stusex" disabled>
+                            <option th:selected="${session.studentinfo.stusex=='男'}" value="male">男</option>
+                            <option th:selected="${session.studentinfo.stusex=='女'}" value="female">女</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stuphone" class="col-sm-3" style="line-height: 34px;text-align: right">电话：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="stuphone" name="stuphone"
+                               th:value="${session.studentinfo.stuphone}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="stubirthday" class="col-sm-3" style="line-height: 34px;text-align: right">生日：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="stubirthday" name="stubirthday"
+                               th:value="${session.studentinfo.stubirthday}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studept" class="col-sm-3" style="line-height: 34px;text-align: right">专业：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="studept" name="studept"
+                               th:value="${session.studentinfo.studept}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-7">
+                        <input type="button" class="form-control btn-primary" id="btn1" value="修改">
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div style="margin-top: 20px;width: 500px;float: left"
+             class="form-horizontal">
+            <form action="" method="post" class="form-horizontal" id="form3" onsubmit="return false;">
+            <div class="form-group">
+                <label for="oldpassword" class="col-sm-3" style="line-height: 34px;text-align: right">原密码：</label>
+                <div class="col-sm-7">
+                    <input type="password" class="form-control" id="oldpassword" name="oldpassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="newpassword" class="col-sm-3" style="line-height: 34px;text-align: right">新密码：</label>
+                <div class="col-sm-7">
+                    <input type="password" class="form-control" id="newpassword" name="newpassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="oncepassword" class="col-sm-3" style="line-height: 34px;text-align: right">再次输入：</label>
+                <div class="col-sm-7">
+                    <input type="password" class="form-control" id="oncepassword" name="oncepassword">
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-3 col-sm-offset-7">
+                    <input type="button" class="form-control btn-primary" value="修改" id="btn3">
+                </div>
+            </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+
+</div>
+
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+    $(document).ready(function () {
+        var form = $('#form2');
+        var form3=$("#form3");
+        $('#form2').bootstrapValidator({
+            message: '该值无效',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                // stuname: {
+                //     message: '姓名验证失败',
+                //     validators: {
+                //         notEmpty: {
+                //             message: '姓名不能为空'
+                //         },
+                //         stringLength: {
+                //             min: 2,
+                //             max: 20,
+                //             message: '用户名长度必须在2到20之间'
+                //         },
+                //         regexp:{
+                //             regexp:/^[\u4e00-\u9fa5]+$/,
+                //             message:'姓名只能为汉字'
+                //         }
+                //         // threshold :  4 , //设置4字符以上开始请求服务器
+                //         // //有待验证，备注以备下次使用。
+                //         // //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                //         // //{"valid":false} //表示不合法，验证不通过
+                //         // //{"valid":true} //表示合法，验证通过
+                //         // remote: {//发起Ajax请求。
+                //         //     url: 'user/name',//验证地址
+                //         //     data:{userName:$('input[name="userName"]').val() }
+                //         //     message: '用户已存在',//提示消息
+                //         //     delay :  2000,//设置2秒发起名字验证
+                //         //     type: 'POST' //请求方式
+                //         // }
+                //     }
+                // },
+                stuphone: {
+                    validators: {
+                        notEmpty: {
+                            message: '电话不能为空'
+                        },
+                        stringLength: {
+                            min: 11,
+                            max: 11,
+                            message: '电话长度必须为11位'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '电话只能是数字'
+                        }
+                    }
+                },
+                stubirthday: {
+                    validators: {
+                        notEmpty: {
+                            message: '生日不能为空'
+                        },
+                        regexp: {
+                            regexp: /^(([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29)$/,
+                            message: '请输入yyyy-MM-mm条件的日期'
+                        }
+                    }
+                }
+            }
+        })
+        $('#form3').bootstrapValidator({
+            message: '该值无效',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                oldpassword: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 20,
+                            message: '长度只能为6-20位'
+                        },
+                        regexp: {
+                            regexp: /^[^ ]+$/,
+                            message: '密码不能包含空格'
+                        }
+                    }
+                },
+                newpassword: {
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 20,
+                            message: '长度只能为6-20位'
+                        },
+                        regexp: {
+                            regexp: /^[^ ]+$/,
+                            message: '密码不能包含空格'
+                        }
+                    }
+                },
+                oncepassword:{
+                    validators: {
+                        notEmpty: {
+                            message: '密码不能为空'
+                        },
+                        stringLength: {
+                            min: 6,
+                            max: 20,
+                            message: '长度只能为6-20位'
+                        },
+                        regexp: {
+                            regexp: /^[^ ]+$/,
+                            message: '密码不能包含空格'
+                        },
+                        identical: {
+                            field: 'newpassword',
+                            message: '用户新密码与确认密码不一致！'
+                        }
+                    }
+                }
+            }
+        })
+        $("#btn1").click(function () {
+            var re = form.data('bootstrapValidator');
+            re.validate();
+            if (re.isValid()) {
+                //发送ajax请求
+                $.ajax({
+                    url: '/info/updateinfo',
+                    async: false,
+                    type: 'POST',
+                    data: form.serialize(),
+                    complete: function (msg) {
+                        console.log('完成')
+                    },
+                    success: function (data) {
+                        if (data['success']) {
+                            alert("修改成功")
+                            window.location.replace("/info");
+                        } else {
+                            alert("修改失败，请重新输入");
+                            //重新校检
+                            $("#form2").data('bootstrapValidator').resetForm();
+                        }
+                    }
+
+                })
+            }
+        })
+        $("#btn3").click(function () {
+            var re = form3.data('bootstrapValidator');
+            re.validate();
+            if (re.isValid()) {
+                //发送ajax请求
+                $.ajax({
+                    url: '/info/updatepassword',
+                    async: false,
+                    type: 'POST',
+                    data: form3.serialize(),
+                    complete: function (msg) {
+                        console.log('完成')
+                    },
+                    success: function (data) {
+                        if (data['success']) {
+                            alert("修改成功,请重新登录")
+                            window.location.replace("/login/logout");
+                        } else {
+                            alert("修改失败，请重新输入");
+                            //重新校检
+                            $("#form3").data('bootstrapValidator').resetForm();
+                        }
+                    }
+
+                })
+            }
+        })
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html :th="http://www.thymeleaf.org" lang="en" xmlns: xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>学生选课后台管理系统</title>
+
+    <link href="/js/layui-v2.5.5/layui/css/layui.css" rel="stylesheet"/>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrap.css" rel="stylesheet">
+    <script th:src="@{/js/layui-v2.5.5/layui/layui.js}"></script>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+    <link href="/js/bootstrap-3.3.7-dist/css/bootstrapValidator.css" rel="stylesheet">
+    <script src="/js/bootstrap-3.3.7-dist/js/bootstrapValidator.js"></script>
+</head>
+<body class="layui-layout-body" id="body1">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo"><a href="/info" style="font-size: 28px">学生管理系统</a></div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src="/images/1.jpg" ;; class="layui-nav-img"/>
+                    <span th:text="${session.username}"></span>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="/info">基本资料</a></dd>
+                    <dd>..</dd>
+                    <dd><a href="/info">修改密码</a></dd>
+                </dl>
+
+
+            </li>
+            <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item  "><a href="/info">个人信息管理</a></li>
+                <li class="layui-nav-item">
+                    <a class="" href="/student/findall/1?pagename=userinfo">学生信息管理</a>
+                </li>
+                <li class="layui-nav-item layui-nav-itemed"><a href="/course/findall/1">课程信息管理</a></li>
+                <li class="layui-nav-item"><a href="/score/findallPage/1">选课信息管理</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+
+
+        <!-- 内容主体区域 -->
+        <div style="width: 400px;margin: 0 auto">
+            <h2>欢迎用户<span style="color: #00F7DE" th:text="${session.username}"></span>登录此系统！</h2>
+        </div>
+        <hr style="height: 2px"/>
+        <div style="margin-top: 20px;width: 500px;float: left"
+             class="form-horizontal">
+            <form action="" method="post" class="form-horizontal" id="form2" onsubmit="return false;">
+                <div class="form-group">
+                    <label for="cid" class="col-sm-3" style="line-height: 34px;text-align: right">课程号：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="cid" name="cid">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="cname" class="col-sm-3" style="line-height: 34px;text-align: right">课程名：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="cname" name="cname">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="ccredit" class="col-sm-3" style="line-height: 34px;text-align: right">学分：</label>
+                    <div class="col-sm-7">
+                        <input type="text" class="form-control" id="ccredit" name="ccredit">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-3 col-sm-offset-4">
+                        <a href="/course/findall/1" class="btn btn-primary form-control">返回</a>
+                    </div>
+                    <div class="col-sm-3">
+                        <input type="button" class="form-control btn-success" id="btn1" value="新增">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © layui.com - 底部固定区域
+    </div>
+
+</div>
+
+<script>
+    //JavaScript代码区域
+    layui.use('element', function () {
+        var element = layui.element;
+    });
+
+    $(document).ready(function () {
+        var form = $('#form2');
+        $('#form2').bootstrapValidator({
+            message: '该值无效',
+            //提供输入验证图标提示
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                cid:{
+                    validators: {
+                        notEmpty: {
+                            message: '课程号不能为空'
+                        },
+                        stringLength: {
+                            min: 4,
+                            max: 4,
+                            message: '课程号长度必须为4位'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '课程号只能是数字'
+                        },
+                        threshold :  4 , //设置4字符以上开始请求服务器
+                        //有待验证，备注以备下次使用。
+                        //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                        //{"valid":false} //表示不合法，验证不通过
+                        //{"valid":true} //表示合法，验证通过
+                        remote: {//发起Ajax请求。
+                            url: '/course/checkcoursecid',//验证地址
+                            data:{cid:$('input[name="cid"]').val() },
+                            message: '课程号存在',//提示消息
+                            delay :  2000,//设置2秒发起名字验证
+                            type: 'POST' //请求方式
+                        }
+                    }
+                },
+                cname: {
+                    validators: {
+                        notEmpty: {
+                            message: '课程名不能为空'
+                        },
+                        stringLength: {
+                            min: 2,
+                            max: 20,
+                            message: '课程名长度必须在2到20之间'
+                        },
+                        threshold :  2 , //设置4字符以上开始请求服务器
+                        //有待验证，备注以备下次使用。
+                        //bootstrap的remote验证器需要的返回结果一定是json格式的数据 :
+                        //{"valid":false} //表示不合法，验证不通过
+                        //{"valid":true} //表示合法，验证通过
+                        remote: {//发起Ajax请求。
+                            url: '/course/checkcoursename',//验证地址
+                            data:{cname:$('input[name="cname"]').val() },
+                            message: '课程名已存在',//提示消息
+                            delay :  2000,//设置2秒发起名字验证
+                            type: 'POST' //请求方式
+                        }
+                    }
+                },
+                ccredit: {
+                    validators: {
+                        notEmpty: {
+                            message: '学分不能为空'
+                        },
+                        stringLength: {
+                            min: 1,
+                            max: 1,
+                            message: '学分只能为一位数'
+                        },
+                        regexp: {
+                            regexp: /^[0-9]+$/,
+                            message: '学分只能是数字'
+                        }
+                    }
+                }
+
+            }
+        })
+        $("#btn1").click(function () {
+            var re = form.data('bootstrapValidator');
+            re.validate();
+            if (re.isValid()) {
+                //发送ajax请求
+                $.ajax({
+                    url: '/course/addcourse',
+                    async: false,
+                    type: 'POST',
+                    data: form.serialize(),
+                    complete: function (msg) {
+                        console.log('完成')
+                    },
+                    success: function (data) {
+                        if (data['success']) {
+                            alert("新增成功")
+                            window.location.replace("/course/findall/1");
+                        } else {
+                            alert("新增失败，请重新输入");
+                            //重新校检
+                            $("#form2").data('bootstrapValidator').resetForm();
+                        }
+                    }
+
+                })
+            }
+        })
+
+    })
+</script>
+</body>
+</html>
