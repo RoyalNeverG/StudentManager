@@ -8,6 +8,8 @@ import com.lc.studentmanager.service.StudentService;
 import com.lc.studentmanager.util.Result;
 import com.lc.studentmanager.util.StatusCode;
 import com.sun.xml.internal.ws.resources.HttpserverMessages;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
@@ -24,6 +26,7 @@ import javax.servlet.http.HttpSession;
  * @CreateTime: 2019-12-13 16:59
  * @Description:
  */
+@Api(tags = {"登录接口"})
 @Controller
 @RequestMapping("/login")
 public class LoginController {
@@ -34,11 +37,13 @@ public class LoginController {
     @Autowired
     private ManagerService managerService;
 
-    @RequestMapping("")
+    @ApiOperation("返回登录视图")
+    @RequestMapping(value = "",method = {RequestMethod.POST,RequestMethod.GET})
     public String getLogin(){
         return "login";
     }
 
+    @ApiOperation("退出登录")
     @GetMapping("/logout")
     public String logout(HttpServletRequest httpServletRequest){
         HttpSession session = httpServletRequest.getSession();
@@ -46,6 +51,7 @@ public class LoginController {
         return "redirect:";
     }
 
+    @ApiOperation("登录验证")
     @ResponseBody
     @PostMapping("/")
     public Result loginCheck(String username, String password,String permissionUser,HttpServletRequest httpServletRequest){
@@ -76,6 +82,7 @@ public class LoginController {
         return new Result(StatusCode.ERROR, "验证失败", false);
     }
 
+    @ApiOperation("返回个人信息视图")
     @GetMapping("/userinfo")
     public String showUserinfo(){
         return "userinfo";

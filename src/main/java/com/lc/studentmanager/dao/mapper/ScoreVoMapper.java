@@ -54,4 +54,7 @@ public interface ScoreVoMapper extends Mapper<ScoreVo> {
             "WHERE\n" +
             "\ts.cid = course.cid and stuid=#{stuid}")
     List<ScoreVo> getAllStudentScoreVo(@Param("stuid") String stuid);
+
+    List<ScoreVo> searchScoreBystuidAndstuNameAndCName(@Param("stuid") String stuid, @Param("stuname") String stuname, @Param("cname") String cname);
+    List<ScoreVo> searchScoreBystuidAndstuNameAndCNameIsStudent(@Param("stuid") String stuid,@Param("cname") String cname);
 }

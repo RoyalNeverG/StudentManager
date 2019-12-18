@@ -19,3 +19,6 @@ mybatis:
   type-aliases-package: com.lc.studentmanager.entity
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+swagger:
+  enable:
+    true

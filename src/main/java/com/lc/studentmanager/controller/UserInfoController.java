@@ -8,6 +8,8 @@ import com.lc.studentmanager.permissionManager.AuthToken;
 import com.lc.studentmanager.service.StudentService;
 import com.lc.studentmanager.util.Result;
 import com.lc.studentmanager.util.StatusCode;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,6 +27,7 @@ import javax.servlet.http.HttpSession;
  * @CreateTime: 2019-12-14 17:14
  * @Description:
  */
+@Api(tags = {"个人信息管理接口"})
 @Controller
 @RequestMapping("/info")
 public class UserInfoController {
@@ -38,11 +41,13 @@ public class UserInfoController {
     @Autowired
     private StudentMapper studentMapper;
 
+    @ApiOperation("返回个人信息视图")
     @GetMapping("")
     public String getInfoPage(){
         return "userinfo";
     }
 
+    @ApiOperation("更新个人信息")
     @PostMapping("/updateinfo")
     @ResponseBody
     public Result updateInfo(String stuphone, String stubirthday, HttpSession httpSession){
@@ -61,6 +66,7 @@ public class UserInfoController {
         return new Result(StatusCode.ERROR, "修改失败", false);
     }
 
+    @ApiOperation("更新密码")
     @ResponseBody
     @PostMapping("/updatepassword")
     public Result updatepassword(String oldpassword,String newpassword,HttpSession httpSession){

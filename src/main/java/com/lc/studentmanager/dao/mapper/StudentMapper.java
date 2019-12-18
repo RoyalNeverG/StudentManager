@@ -1,8 +1,12 @@
 package com.lc.studentmanager.dao.mapper;
 
 import com.lc.studentmanager.entity.Student;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Repository;
 import tk.mybatis.mapper.common.Mapper;
+
+import java.util.List;
 
 /**
  * @BelongsProject: studentmanager
@@ -13,5 +17,7 @@ import tk.mybatis.mapper.common.Mapper;
  */
 @Repository
 public interface StudentMapper extends Mapper<Student> {
+
+    public List<Student> searchStudentByIdAndName(@Param("stuid") String stuid,@Param("stuname") String stuname);
 
 }

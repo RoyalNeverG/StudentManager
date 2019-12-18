@@ -19,12 +19,14 @@
             <li class="layui-nav-item">
                 <a href="javascript:;">
                     <img src="/images/1.jpg" ;; class="layui-nav-img"/>
+                    <span th:if="${session.role=='manager'}"><b>管理员:</b></span>
+                    <span th:if="${session.role=='student'}"><b>用户:</b></span>
                     <span th:text="${session.username}"></span>
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="/info/">基本资料</a></dd>
                     <dd>..</dd>
-                    <dd><a href="">修改密码</a></dd>
+                    <dd><a href="/info">修改密码</a></dd>
                 </dl>
             </li>
             <li class="layui-nav-item"><a href="/login/logout">退出</a></li>
@@ -48,8 +50,28 @@
     <div class="layui-body">
         <!-- 内容主体区域 -->
         <div style="padding: 15px;">
+            <div style="width: 800px">
+                <form action="/course/courseinfoserrch" method="post">
+                    <div class="form-group">
+                        <label for="cidinfo" class="col-sm-2" style="text-align: right;line-height: 34px">课程号:</label>
+                        <div class=" col-sm-3">
+                            <input type="text" id="cidinfo" placeholder="请输入课程号" class="form-control" name="cidinfo">
+                        </div>
+                        <label for="cnameinfo" class="col-sm-2" style="text-align: right;line-height: 34px">课程名:</label>
+                        <div class=" col-sm-3">
+                            <input type="text" name="cnameinfo" id="cnameinfo" placeholder="请输入课程名" class="form-control">
+                        </div>
+                        <div class="col-sm-2">
+                            <input type="submit" class="form-control btn-primary" id="searchinfo" value="搜索">
+                        </div>
+                    </div>
+                </form>
+            </div>
             <div style="margin-bottom: 5px">
                 <a href="/course/add" class="btn btn-danger " th:if="${session.role=='manager'}">新增课程</a>
+            </div>
+            <div style="margin-bottom: 5px;height: 38px" th:if="${session.role=='student'}">
+
             </div>
             <div class="panel panel-default">
                 <div class="panel-heading text-center">
@@ -99,9 +121,9 @@
         </div>
     </div>
 
-    <div class="layui-footer">
+    <div class="layui-footer" style="text-align: center">
         <!-- 底部固定区域 -->
-        © layui.com - 底部固定区域
+        © copyright 湖北工程学院-软件工程-Lc
     </div>
 </div>
 <script th:src="@{/js/layui-v2.5.5/layui/layui.js}"></script>
@@ -172,7 +194,7 @@
                         alert("删除成功！")
                         window.location.replace("/course/findall/1");
                     } else {
-                        alert("请勿失败！")
+                        alert("删除失败！")
                     }
                 }
 
