@@ -177,7 +177,12 @@
                         alert("删除成功！")
                         window.location.replace("/score/findallPage/1");
                     } else {
-                        alert("删除失败！")
+                        if(data['code']==20005){
+                            alert("权限不足")
+                        }else{
+                            alert("删除失败！")
+                        }
+
                     }
                 }
 

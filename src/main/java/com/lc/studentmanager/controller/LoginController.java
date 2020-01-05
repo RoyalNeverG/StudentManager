@@ -1,20 +1,16 @@
 package com.lc.studentmanager.controller;
 
-import com.lc.studentmanager.dao.mapper.ManagerMapper;
 import com.lc.studentmanager.entity.Manager;
 import com.lc.studentmanager.entity.Student;
 import com.lc.studentmanager.service.ManagerService;
 import com.lc.studentmanager.service.StudentService;
 import com.lc.studentmanager.util.Result;
 import com.lc.studentmanager.util.StatusCode;
-import com.sun.xml.internal.ws.resources.HttpserverMessages;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import sun.security.provider.MD5;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;

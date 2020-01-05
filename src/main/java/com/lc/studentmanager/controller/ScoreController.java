@@ -87,8 +87,12 @@ public class ScoreController {
 
     @ApiOperation("删除选课信息")
     @ResponseBody
+//    @AuthToken(role_name = {"manager"})
     @GetMapping("/deletescore")
-    public Result deleteScore(String scoreid){
+    public Result deleteScore(String scoreid,HttpSession session){
+        if(!session.getAttribute("role").toString().equals("manager")){
+            return new Result(StatusCode.REPERROR, "权限不足", false);
+        }
         Score score=new Score();
         score.setScoreid(Integer.valueOf(scoreid));
         int delete = scoreMapper.delete(score);
